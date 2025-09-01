@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Oracle VM Server - Jatco México</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1a4d3a;
+            --secondary-green: #2d8f47;
+            --accent-green: #3bc95f;
+            --neon-green: #00ff6b;
+            --dark-green: #0f2d20;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --carbon: #2c2c2c;
+            --chrome: linear-gradient(45deg, #c0c0c0, #ffffff, #c0c0c0);
+            --gear-gradient: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 50%, var(--accent-green) 100%);
+            --transmission-gradient: linear-gradient(45deg, #1a4d3a, #2d8f47, #3bc95f, #2d8f47);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0a1a0f 0%, #1a2e23 50%, #0a1a0f 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Circuit Background */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+            background: 
+                radial-gradient(circle at 20% 20%, var(--neon-green) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, var(--accent-green) 1px, transparent 1px),
+                linear-gradient(90deg, transparent 49%, var(--secondary-green) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, var(--secondary-green) 50%, transparent 51%);
+            background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+            animation: circuit-flow 20s linear infinite;
+        }
+
+        @keyframes circuit-flow {
+            0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 50px 50px, -50px -50px, 25px 25px, -25px -25px; }
+        }
+
+        /* Floating Gear Animations */
+        .gear-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .gear {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--gear-gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: rotate 15s linear infinite;
+        }
+
+        .gear::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, transparent 30%, var(--neon-green) 31%, var(--neon-green) 32%, transparent 33%);
+            border-radius: 50%;
+        }
+
+        .gear:nth-child(1) { top: 10%; left: 5%; animation-duration: 10s; }
+        .gear:nth-child(2) { top: 20%; right: 10%; animation-duration: 15s; animation-direction: reverse; }
+        .gear:nth-child(3) { top: 60%; left: 8%; animation-duration: 12s; }
+        .gear:nth-child(4) { bottom: 20%; right: 15%; animation-duration: 18s; animation-direction: reverse; }
+        .gear:nth-child(5) { top: 40%; left: 50%; animation-duration: 20s; }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Header with Car Transmission Theme */
+        header {
+            background: linear-gradient(135deg, var(--transmission-gradient));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 107, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 107, 0.1) 2px,
+                    rgba(0, 255, 107, 0.1) 4px
+                );
+            animation: scan-line 3s ease-in-out infinite;
+        }
+
+        @keyframes scan-line {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(0, 255, 107, 0.2));
+            border: 2px solid var(--neon-green);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-green);
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: visible;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 107, 0.4),
+                inset 0 0 20px rgba(0, 255, 107, 0.1);
+        }
+
+        .logo-container img {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 107, 0.3));
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), transparent, var(--neon-green));
+            z-index: -1;
+            border-radius: 15px;
+            animation: border-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes border-glow {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, var(--neon-green), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 107, 0.5);
+            animation: title-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes title-glow {
+            from { filter: drop-shadow(0 0 10px rgba(0, 255, 107, 0.8)); }
+            to { filter: drop-shadow(0 0 20px rgba(0, 255, 107, 1)); }
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            font-weight: 300;
+            color: var(--accent-green);
+            text-shadow: 0 0 10px rgba(59, 201, 95, 0.7);
+        }
+
+        /* Navigation with Automotive Style */
+        nav {
+            background: linear-gradient(90deg, var(--dark-green), var(--primary-green), var(--dark-green));
+            padding: 1rem 0;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(0, 255, 107, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 107, 0.1));
+            border: 1px solid rgba(0, 255, 107, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 107, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-menu li a:hover {
+            background: var(--gear-gradient);
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 10px 25px rgba(0, 255, 107, 0.4),
+                0 0 30px rgba(0, 255, 107, 0.3);
+            border-color: var(--neon-green);
+        }
+
+        .nav-menu li a:hover::before {
+            left: 100%;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Table of Contents with Gear Design */
+        .toc {
+            background: linear-gradient(135deg, rgba(26, 77, 58, 0.9), rgba(45, 143, 71, 0.8));
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(0, 255, 107, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 107, 0.3);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .toc::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), transparent, var(--accent-green), transparent, var(--neon-green));
+            z-index: -1;
+            border-radius: 22px;
+            animation: border-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes border-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .toc h2 {
+            color: var(--neon-green);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(0, 255, 107, 0.8);
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .toc-item {
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(26, 77, 58, 0.6));
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 107, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toc-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 107, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .toc-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 255, 107, 0.4);
+            border-color: var(--neon-green);
+        }
+
+        .toc-item:hover::before {
+            left: 100%;
+        }
+
+        .toc-item h3 {
+            color: var(--neon-green);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* IP Table with High-Tech Style */
+        .ip-table-container {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(26, 77, 58, 0.4));
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(0, 255, 107, 0.2);
+            border: 1px solid rgba(0, 255, 107, 0.3);
+            overflow-x: auto;
+        }
+
+        .ip-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .ip-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            background: var(--gear-gradient);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            position: relative;
+        }
+
+        .ip-table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .ip-table td {
+            padding: 1.2rem 1rem;
+            border: none;
+            border-bottom: 1px solid rgba(0, 255, 107, 0.2);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .ip-table tr:hover {
+            background: linear-gradient(90deg, rgba(0, 255, 107, 0.1), rgba(59, 201, 95, 0.2), rgba(0, 255, 107, 0.1));
+            transform: scale(1.01);
+            box-shadow: 0 5px 20px rgba(0, 255, 107, 0.2);
+        }
+
+        /* Sections with Metallic Finish */
+        .section {
+            background: linear-gradient(135deg, rgba(26, 77, 58, 0.9), rgba(15, 45, 32, 0.8));
+            border-radius: 20px;
+            padding: 4rem;
+            margin: 4rem 0;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 80px rgba(0, 255, 107, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+            border: 1px solid rgba(0, 255, 107, 0.2);
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .section:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 35px 70px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(0, 255, 107, 0.2);
+        }
+
+        .section h2 {
+            color: var(--neon-green);
+            font-size: 2.8rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 255, 107, 0.6);
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: var(--gear-gradient);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(0, 255, 107, 0.8);
+        }
+
+        .section h3 {
+            color: var(--accent-green);
+            font-size: 1.6rem;
+            margin: 2.5rem 0 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-shadow: 0 0 10px rgba(59, 201, 95, 0.5);
+        }
+
+        .section h3::before {
+            content: '⚡';
+            color: var(--neon-green);
+            font-size: 1.2em;
+            filter: drop-shadow(0 0 8px var(--neon-green));
+        }
+
+        /* Enhanced Steps */
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin: 3rem 0;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(26, 77, 58, 0.3));
+            border-radius: 15px;
+            border-left: 5px solid var(--neon-green);
+            position: relative;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-list li:hover {
+            transform: translateX(15px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.3),
+                -5px 0 30px rgba(0, 255, 107, 0.3);
+            border-left-width: 8px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -3rem;
+            top: 2.5rem;
+            background: var(--gear-gradient);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 3px solid var(--neon-green);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 107, 0.6),
+                inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Code Blocks with Terminal Style */
+        .code-block {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            color: var(--neon-green);
+            padding: 2rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow-x: auto;
+            border: 2px solid rgba(0, 255, 107, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(0, 255, 107, 0.1);
+        }
+
+        .code-block::before {
+            content: '$ ';
+            color: var(--neon-green);
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .code-block:hover {
+            background: linear-gradient(135deg, #0f2d20, #1a4d3a);
+            transform: translateX(8px);
+            border-color: var(--neon-green);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 255, 107, 0.4);
+        }
+
+        /* Enhanced Image Containers */
+        .image-container {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(26, 77, 58, 0.4));
+            border: 2px solid var(--accent-green);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            transition: all 0.5s ease;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 255, 107, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), transparent, var(--accent-green));
+            z-index: -1;
+            border-radius: 17px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.03) rotateX(2deg);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(0, 255, 107, 0.3);
+            border-color: var(--neon-green);
+        }
+
+        .image-container:hover::before {
+            opacity: 1;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.05);
+            cursor: zoom-in;
+        }
+
+        /* Enhanced Warning Boxes */
+        .note-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1));
+            border: 2px solid #ffa726;
+            border-left: 6px solid #ff9800;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: 
+                0 10px 30px rgba(255, 152, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .note-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px #ffa726);
+        }
+
+        .note-box .content {
+            margin-left: 3rem;
+            color: #ffffff;
+        }
+
+        /* Server Cards Enhancement */
+        .server-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .server-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(26, 77, 58, 0.4));
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 255, 107, 0.1);
+            border: 1px solid rgba(0, 255, 107, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .server-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(0, 255, 107, 0.2);
+            border-color: var(--neon-green);
+        }
+
+        .server-card h4 {
+            color: var(--neon-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px rgba(0, 255, 107, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, var(--dark-green), var(--primary-green));
+                flex-direction: column;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                padding: 1rem 0;
+                border-radius: 0 0 20px 20px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .logo-section {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .section {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .step-list li::before {
+                left: -2rem;
+                top: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .step-list li {
+                margin-left: 1.5rem;
+            }
+
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Enhanced Loading Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer Enhancement */
+        footer {
+            background: linear-gradient(135deg, var(--dark-green), var(--primary-green), var(--dark-green));
+            color: white;
+            text-align: center;
+            padding: 3rem;
+            margin-top: 6rem;
+            border-top: 2px solid var(--neon-green);
+            box-shadow: 
+                0 -10px 30px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(0, 255, 107, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-green);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gear-gradient);
+            border-radius: 6px;
+            border: 2px solid var(--dark-green);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--neon-green), var(--accent-green));
+        }
+    </style>
+</head>
+<body>
+    <!-- Circuit Background -->
+    <div class="circuit-bg"></div>
+
+    <!-- Floating Gears -->
+    <div class="gear-container">
+        <div class="gear"></div>
+        <div class="gear"></div>
+        <div class="gear"></div>
+        <div class="gear"></div>
+        <div class="gear"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Logo Jatco México">
+                </div>
+                <div>
+                    <h1>Script de Encendido y Apagado</h1>
+                    <p class="subtitle">Plataforma Oracle VM Server - Jatco México</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a onclick="scrollToSection('diagramas'); return false;">🔧 Diagramas</a></li>
+                <li><a onclick="scrollToSection('direcciones'); return false;">🌐 Direcciones IP</a></li>
+                <li><a onclick="scrollToSection('encendido'); return false;">⚡ Encendido</a></li>
+                <li><a onclick="scrollToSection('apagado'); return false;">🔴 Apagado</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Table of Contents -->
+        <div class="toc fade-in">
+            <h2>⚙️ Índice de Contenidos</h2>
+            <div class="toc-grid">
+                <div class="toc-item" onclick="scrollToSection('diagramas'); return false;">
+                    <h3>🔧 Diagramas Lógicos</h3>
+                    <p>Ambiente de Producción y Q&A - Arquitectura del sistema de transmisiones</p>
+                </div>
+                <div class="toc-item" onclick="scrollToSection('direcciones'); return false;">
+                    <h3>🌐 Direcciones IPv4</h3>
+                    <p>Configuración de red de la plataforma Oracle VM</p>
+                </div>
+                <div class="toc-item" onclick="scrollToSection('encendido'); return false;">
+                    <h3>⚡ Procedimiento de Encendido</h3>
+                    <p>Secuencia completa de inicio del sistema</p>
+                </div>
+                <div class="toc-item" onclick="scrollToSection('apagado'); return false;">
+                    <h3>🔴 Procedimiento de Apagado</h3>
+                    <p>Secuencia segura de apagado del sistema</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramas Section -->
+        <section id="diagramas" class="section fade-in">
+            <h2>🔧 Diagramas Lógicos del Ambiente</h2>
+            
+            <h3>Diagrama Lógico de Ambiente de Producción</h3>
+            <div class="image-container">
+                <img src="1.png" alt="Diagrama Lógico de Ambiente de Producción">
+            </div>
+            
+            <h3>Diagrama Lógico de Ambiente de Q&A</h3>
+            <div class="image-container">
+                <img src="2.png" alt="Diagrama Lógico de Ambiente de Q&A">
+            </div>
+        </section>
+
+        <!-- IP Addresses Section -->
+        <section id="direcciones" class="section fade-in">
+            <h2>🌐 Direcciones IPv4 de la Plataforma Oracle VM Server</h2>
+            
+            <div class="ip-table-container">
+                <table class="ip-table">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th>Gateway</th>
+                            <th>DNS</th>
+                            <th>Server (jatco.com.mx)</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>10.8.79.101</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL01</td><td>Oracle VM Server1</td></tr>
+                        <tr><td>10.8.79.102</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL02</td><td>Oracle VM Server2</td></tr>
+                        <tr><td>10.8.79.103</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL03</td><td>Oracle VM Server3</td></tr>
+                        <tr><td>10.8.79.104</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL04</td><td>Oracle VM Server4</td></tr>
+                        <tr><td>10.8.79.105</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL05</td><td>VM MIDDLEWARE QA</td></tr>
+                        <tr><td>10.8.79.106</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL06</td><td>VM DATABASE QA</td></tr>
+                        <tr><td>10.8.79.107</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL07</td><td>VM MIDDLEWARE PROD</td></tr>
+                        <tr><td>10.8.79.108</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL08</td><td>VM DATABASE N1 PROD</td></tr>
+                        <tr><td>10.8.79.109</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL09</td><td>VM DATABASE N2 PROD</td></tr>
+                        <tr><td>10.8.79.110</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL06-VIP</td><td>IP RAC PRODUCTION</td></tr>
+                        <tr><td>10.8.79.111</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL06-VIP</td><td>IP RAC PRODUCTION</td></tr>
+                        <tr><td>10.8.79.112</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC PRODUCTION</td></tr>
+                        <tr><td>10.8.79.113</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC PRODUCTION</td></tr>
+                        <tr><td>10.8.79.114</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC PRODUCTION</td></tr>
+                        <tr><td>10.8.79.115</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVH19T</td><td>Server JEMS windows S1</td></tr>
+                        <tr><td>10.8.79.116</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL08-VIP</td><td>IP RAC Production</td></tr>
+                        <tr><td>10.8.79.117</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL09-VIP</td><td>IP RAC Production</td></tr>
+                        <tr><td>10.8.79.118</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC Production</td></tr>
+                        <tr><td>10.8.79.119</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC Production</td></tr>
+                        <tr><td>10.8.79.120</td><td>10.8.79.254</td><td>10.92.90.1</td><td>JMXSVL-SCAN</td><td>IP RAC Production</td></tr>
+                        <tr><td>192.168.100.108</td><td>-----------</td><td>-----------</td><td>JMXSVL08-PRIV</td><td>Heartbeat RAC</td></tr>
+                        <tr><td>192.168.100.109</td><td>-----------</td><td>-----------</td><td>JMXSVL09-PRIV</td><td>Heartbeat RAC</td></tr>
+                        <tr><td>10.92.90.107</td><td>10.92.90.254</td><td>10.92.90.1</td><td>JMXSVOVMM</td><td>OVM Administrator</td></tr>
+                        <tr><td>192.168.200.126</td><td>192.168.200.254</td><td>10.92.90.1</td><td>iLo</td><td>HPE iLo Server JMXSVL01</td></tr>
+                        <tr><td>192.168.200.127</td><td>192.168.200.254</td><td>10.92.90.1</td><td>iLo</td><td>HPE iLo Server</td></tr>
+                        <tr><td>192.168.200.128</td><td>192.168.200.254</td><td>10.92.90.1</td><td>iLo</td><td>HPE iLo Server</td></tr>
+                        <tr><td>192.168.200.129</td><td>192.168.200.254</td><td>10.92.90.1</td><td>iLo</td><td>HPE iLo Server</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note-box">
+                <div class="content">
+                    <strong>NOTA:</strong> Todos los datos utilizados para realizar este procedimiento son de laboratorio, 
+                    por lo que las direcciones IPv4, números de serie y hostnames pueden variar a los datos de las configuraciones 
+                    de Jatco México, no se proporcionan passwords por ser datos confidenciales y son propiedad de Jatco México 
+                    aplicables a este documento.
+                </div>
+            </div>
+        </section>
+
+        <!-- Startup Section -->
+        <section id="encendido" class="section fade-in">
+            <h2>⚡ Orden de Encendido</h2>
+
+            <h3>1. Encender los Servidores (Físicamente/iLo)</h3>
+            <p><strong>Aplica para Servers HP:</strong> JMXSVL01, JMXSVL02, JMXSVL03 y JMXSVL04</p>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Acceder con el usuario Administrator</strong>
+                    <div class="image-container">
+                        <img src="3.png" alt="Acceso de administrador">
+                    </div>
+                </li>
+                <li>
+                    <strong>En la sección de Power & Thermal</strong>
+                    <div class="image-container">
+                        <img src="4.png" alt="Interfaz Power & Thermal">
+                    </div>
+                    <p>Seleccionar la acción a realizar, en este caso encendido o reiniciar.</p>
+                </li>
+                <li>
+                    <strong>Validación de que OVM Server esté disponible, desde la consola de iLo</strong>
+                    <div class="image-container">
+                        <img src="5.jpg" alt="Validación OVM Server desde consola iLo">
+                    </div>
+                </li>
+            </ul>
+
+            <h3>2. Encendido de VM de Oracle VM Manager en granja de VMware</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Acceder a la granja de VMware y ubicar la VM de OVM Manager</strong>
+                    <div class="image-container">
+                        <img src="6.png" alt="VMware vCenter con VM de OVM Manager">
+                    </div>
+                    <p>Una vez ubicada con el botón derecho en la barra de Acciones, ubicar <strong>Energía</strong> y hacer click en <strong>Encender</strong>.</p>
+                </li>
+                <li>
+                    <strong>Validar que la acción finalice exitosa, mediante la consola remota desde VMware</strong>
+                    <div class="image-container">
+                        <img src="7.png" alt="Validación arranque exitoso en VMware">
+                    </div>
+                </li>
+                <li>
+                    <strong>Acceder vía web a la dirección: https://10.92.90.107:7002/ovm/console</strong>
+                    <div class="image-container">
+                        <img src="8.png" alt="Consola web Oracle VM Manager">
+                    </div>
+                </li>
+            </ul>
+
+            <div class="note-box">
+                <div class="content">
+                    <strong>En caso de que la VM levante exitosamente pero no sea posible acceder vía web:</strong><br>
+                    Se deberá validar el estado del Firewall de Linux.<br><br>
+                    Acceder vía ssh con el usuario root a la IP 10.92.90.107<br><br>
+                    <div class="code-block">systemctl status firewalld</div>
+                    <div class="code-block">systemctl stop firewalld</div>
+                    <div class="image-container">
+                        <img src="9.png" alt="Comandos firewall en terminal">
+                    </div>
+                </div>
+            </div>
+
+            <h3>3. Encendido de VMs de BD y Middleware de Prod y Q&A</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Acceder a la siguiente dirección: https://10.92.90.107:7002/ovm/console</strong>
+                    <p>Deberá observar la siguiente pantalla</p>
+                    <div class="image-container">
+                        <img src="10.png" alt="Pantalla principal Oracle VM Manager">
+                    </div>
+                </li>
+                <li>
+                    <strong>Proceder a encender dentro de cada servidor las VMs de BD y QA</strong>
+                    <p><strong>Aplica para los Servidores Virtuales:</strong></p>
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🏭 Ambiente de Producción</h4>
+                            <p><strong>Orden de arrancado:</strong></p>
+                            <ol>
+                                <li>JMXSVL07</li>
+                                <li>JMXSVL08</li>
+                                <li>JMXSVL09</li>
+                            </ol>
+                        </div>
+                        <div class="server-card">
+                            <h4>🔬 Ambiente de Q&A</h4>
+                            <p><strong>Orden de arrancado:</strong></p>
+                            <ol>
+                                <li>JMXSVL05</li>
+                                <li>JMXSVL06</li>
+                            </ol>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Click de botón derecho sobre la VM y seleccionar la opción de "Start"</strong>
+                    <div class="image-container">
+                        <img src="11.png" alt="Menú contextual con opción Start">
+                    </div>
+                    <div class="image-container">
+                        <img src="12.png" alt="Confirmación de inicio de VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="13.png" alt="Estado de la VM durante arranque">
+                    </div>
+                </li>
+                <li>
+                    <strong>Verificar que la acción se ejecute correctamente mediante la opción de Launch console</strong>
+                    <div class="image-container">
+                        <img src="14.png" alt="Botón Launch console">
+                    </div>
+                    <div class="image-container">
+                        <img src="15.png" alt="Consola de la primera VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="16.png" alt="Consola de la segunda VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="17.png" alt="Consola de la tercera VM">
+                    </div>
+                </li>
+            </ul>
+
+            <h3>4. Levantamiento de BD en ambientes de Producción</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Nos conectamos a nuestro servidor en Producción</strong>
+                    <div class="code-block">ssh -l root 10.8.79.108</div>
+                    <p>ó</p>
+                    <div class="code-block">ssh -l root 10.8.79.109</div>
+                </li>
+                <li>
+                    <strong>Validar los servicios del cluster con el siguiente comando</strong>
+                    <div class="image-container">
+                        <img src="18.jpg" alt="Estado del cluster con crsctl">
+                    </div>
+                </li>
+                <li>
+                    <strong>En caso de que los servicios no estén ONLINE se deben levantar de manera manual</strong>
+                    <div class="code-block">crsctl start cluster -all</div>
+                </li>
+                <li>
+                    <strong>Una vez validado el cluster se deben levantar las Bases de Datos</strong>
+                    <p>Nos conectamos con el usuario Oracle y ejecutar:</p>
+                    <p><strong>Puede ser en cualquier Nodo 08 u Nodo 09 para Producción</strong></p>
+                    <div class="code-block">srvctl start database -d jmx</div>
+                    <div class="code-block">srvctl start database -d jems</div>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🏭 Distribución de BDs en Producción</h4>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">HOST</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">IP</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">DATABASE</th>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">JMXSVL08</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">10.8.79.108</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">jmx1 jems1</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">JMXSVL09</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">10.8.79.109</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">jmx2 jems2</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Las aplicaciones de Middleware se levantan automáticamente</strong>
+                    <p>Las aplicaciones de Middleware se levantan en automático con el Sistema Operativo, los servicios el detenerlos u reiniciarlos varían de los productos. La recomendación es en caso de fallo, reiniciar la VM en ambos Ambientes de Producción.</p>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🔧 Aplicaciones configuradas en Producción</h4>
+                            <ul>
+                                <li><strong>HULFT</strong></li>
+                                <li><strong>Microfocus Cobol</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                                                
+                </li>
+            </ul>
+            <div class="image-container">
+                <img src="19.png" alt="Lista de aplicaciones del sistema">
+            </div>
+                    
+            <p><strong>Para validar que se estén ejecutando correctamente:</strong></p>
+            <div class="code-block">systemctl list-unit-files --type service --all | grep -i hulft</div>
+            <div class="code-block">systemctl list-unit-files --type service --all | grep -i MFS</div>
+            
+            <div class="image-container">
+                <img src="20.png" alt="Validación de servicios con grep">
+            </div>
+            
+            <p><strong>Si está habilitado validar que se estén ejecutando:</strong></p>
+            <div class="code-block">systemctl status MFSafeNet.service</div>
+            <div class="code-block">systemctl status hulft.service</div>
+            
+            <div class="image-container">
+                <img src="21.png" alt="Estado detallado de servicios">
+            </div>
+            
+            <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
+            <div class="code-block">systemctl start MFSafeNet.service</div>
+            <div class="code-block">systemctl start hulft.service</div>
+
+            <h3>5. Levantamiento de BD en ambientes de Q&A</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Nos conectamos a nuestro servidor en Q&A</strong>
+                    <div class="code-block">ssh -l root 10.8.79.106</div>
+                </li>
+                <li>
+                    <strong>Validar los servicios del cluster con el siguiente comando</strong>
+                    <div class="code-block">/u02/app/11.2.0/grid/bin/crsctl stat res -t</div>
+                    <div class="image-container">
+                        <img src="22.png" alt="Estado del cluster Q&A">
+                    </div>
+                </li>
+                <li>
+                    <strong>En caso de que los servicios no estén ONLINE se deben levantar manualmente</strong>
+                    <div class="code-block">/u02/app/11.2.0/grid/bin/crsctl start cluster -all</div>
+                </li>
+                <li>
+                    <strong>Una vez validado el cluster se deben levantar las Bases de Datos</strong>
+                    <p>Nos conectamos con el usuario Oracle y ejecutar:</p>
+                    
+                    <div class="code-block">export ORACLE_SID=jmxdev<br>sqlplus / as sysdba<br>SQL> startup<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxtst<br>sqlplus / as sysdba<br>SQL> startup<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxtry<br>sqlplus / as sysdba<br>SQL> startup<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxsys<br>sqlplus / as sysdba<br>SQL> startup<br>SQL> exit</div>
+                    
+                    <div class="image-container">
+                        <img src="23.png" alt="Startup de bases de datos Q&A">
+                    </div>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🔬 Distribución de BDs en Q&A</h4>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">HOST</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">IP</th>
+                                    <th style="border: 1px solid #ddd; padding: 8px; background: rgba(0, 255, 107, 0.2); color: white;">DATABASE</th>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">JMXSVL06</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">10.8.79.106</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">jmxdev jems jmxtst jmxtry jmxsys</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Las aplicaciones de Middleware en Q&A</strong>
+                    <p>Las aplicaciones de Middleware se levantan automáticamente con el Sistema Operativo, los servicios el detenerlos u reiniciarlos varían de los productos . La recomendación es en caso de fallo, reiniciar la VM en QA.</p>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🔧 Aplicaciones configuradas en Q&A</h4>
+                            <ul>
+                                <li><strong>HULFT</strong></li>
+                                <li><strong>Microfocus Cobol</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p>Nos conectamos a nuestro servidor en producción:</p>
+                    <div class="code-block">ssh -l root 10.8.79.107</div>
+                    
+                    <div class="image-container">
+                        <img src="24.png" alt="Servidor middleware Q&A">
+                    </div>
+                    
+                    <p><strong>La forma de validar es la siguiente:</strong></p>
+                    <div class="code-block">systemctl list-unit-files --type service --all | grep -i hulft</div>
+                    <div class="code-block">systemctl list-unit-files --type service --all | grep -i MFS</div>
+                    
+                    <div class="image-container">
+                        <img src="25.png" alt="Validación de servicios Q&A">
+                    </div>
+                    
+                    <p><strong>Si está habilitado validar que se estén ejecutando:</strong></p>
+                    <div class="code-block">systemctl status MFSafeNet.service</div>
+                    <div class="code-block">systemctl status hulft.service</div>
+                    
+                    <div class="image-container">
+                        <img src="26.png" alt="Estado de servicios Q&A">
+                    </div>
+                    
+                    <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
+                    <div class="code-block">systemctl start MFSafeNet.service</div>
+                    <div class="code-block">systemctl start hulft.service</div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Shutdown Section -->
+        <section id="apagado" class="section fade-in">
+            <h2>🔴 Orden de Apagado</h2>
+            
+            <div class="note-box">
+                <div class="content">
+                    Actualmente las Bases de Datos en los ambientes de Producción y QA están programadas para levantar 
+                    de manera automática con el sistema operativo, al igual que las Aplicaciones. Este procedimiento 
+                    aplica para los casos donde se requieren bajar las BDs sin reiniciar las VMs.
+                </div>
+            </div>
+
+            <h3>1. Baja de BD en ambientes de Producción (De manera manual)</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Nos conectamos a nuestro servidor en Producción</strong>
+                    <div class="code-block">ssh -l root 10.8.79.108</div>
+                    <p>ó</p>
+                    <div class="code-block">ssh -l root 10.8.79.109</div>
+                </li>
+                <li>
+                    <strong>Baja de las Bases de Datos</strong>
+                    <p>Nos conectamos con el usuario Oracle y ejecutar:</p>
+                    <p><strong>Para validar el status de nuestra base de datos ejecutamos lo siguiente:</strong></p>
+                    <div class="code-block">srvctl status database -d jmx</div>
+                    
+                    <div class="image-container">
+                        <img src="27.png" alt="Status de bases de datos">
+                    </div>
+                    
+                    <p><strong>Puede ser en cualquier Nodo 08 u Nodo 09 para Producción:</strong></p>
+                    <div class="code-block">srvctl stop database -d jmx</div>
+                    <div class="code-block">srvctl stop database -d jems</div>
+                </li>
+                <li>
+                    <strong>Para validar el status de una instancia en específico, ejecutamos lo siguiente:</strong>
+                    <div class="code-block">srvctl status instance -d jmx -i jmx1<br>srvctl status instance -d jmx -i jmx2</div>
+                    <div class="code-block">srvctl status instance -d jems -i jems1<br>srvctl status instance -d jems -i jems2</div>
+                </li>
+                <li>
+                    <strong>Para detener una instancia en específico, ejecutamos lo siguiente:</strong>
+                    <div class="code-block">srvctl stop instance -d jmx -i jmx1<br>srvctl stop instance -d jmx -i jmx2</div>
+                    <div class="code-block">srvctl stop instance -d jems -i jems1<br>srvctl stop instance -d jems -i jems2</div>
+                </li>
+                <li>
+                    <strong>Validar los servicios del cluster</strong>
+                    <p>Para tomar evidencia del antes y después de la baja de BDs:</p>
+                    <div class="code-block">crsctl stat res -t</div>
+                </li>
+                <li>
+                    <strong>Detener todos los servicios de manera manual</strong>
+                    <div class="code-block">crsctl stop cluster -all</div>
+                </li>
+                <li>
+                    <strong>Deshabilitar inicio automático (opcional)</strong>
+                    <p>Si se tienen actividades de mantenimiento y no se desea que el servicio de Clusterware se inicien de manera automática:</p>
+                    <div class="code-block">crsctl disable crs</div>
+                    
+                    <p><strong>Una vez terminado el mantenimiento, para habilitar el inicio automático:</strong></p>
+                    <div class="code-block">crsctl enable crs<br>crsctl start crs</div>
+                </li>
+            </ul>
+
+            <h3>2. Baja de Aplicaciones en Producción</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Las aplicaciones de Middleware se bajan automáticamente</strong>
+                    <p>Las aplicaciones de Middleware se bajan automáticamente con el Sistema Operativo, los servicios el detenerlos u reiniciarlos varían de los productos . La recomendación es en caso de fallo, reiniciar la VM en ambos Ambientes de Producción.</p>
+                    
+                    <p>Nos conectamos a nuestro servidor en Producción:</p>
+                    <div class="code-block">ssh -l root 10.8.79.107</div>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🔧 Aplicaciones en Producción</h4>
+                            <ul>
+                                <li><strong>HULFT</strong></li>
+                                <li><strong>Microfocus Cobol</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p><strong>En caso de querer detenerlos manualmente:</strong></p>
+                    <div class="code-block">systemctl stop MFSafeNet.service</div>
+                    <div class="code-block">systemctl stop hulft.service</div>
+                </li>
+            </ul>
+
+            <h3>3. Baja de BD en ambientes de QA (De manera manual)</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Nos conectamos a nuestro servidor en Q&A</strong>
+                    <div class="code-block">ssh -l root 10.8.79.106</div>
+                </li>
+                <li>
+                    <strong>Validar los servicios del cluster</strong>
+                    <div class="code-block">/u02/app/11.2.0/grid/bin/crsctl stat res -t</div>
+                    
+                    <div class="image-container">
+                        <img src="28.png" alt="Cluster QA antes del apagado">
+                    </div>
+                </li>
+                <li>
+                    <strong>Apagar las Bases de Datos</strong>
+                    <p>Nos conectamos con el usuario Oracle y ejecutar:</p>
+                    
+                    <div class="code-block">export ORACLE_SID=jmxdev<br>sqlplus / as sysdba<br>SQL> shutdown immediate<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxtst<br>sqlplus / as sysdba<br>SQL> shutdown immediate<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxtry<br>sqlplus / as sysdba<br>SQL> shutdown immediate<br>SQL> exit</div>
+                    <div class="code-block">export ORACLE_SID=jmxsys<br>sqlplus / as sysdba<br>SQL> shutdown immediate<br>SQL> exit</div>
+                </li>
+                <li>
+                    <strong>Detener el cluster</strong>
+                    <div class="code-block">/u02/app/11.2.0/grid/bin/crsctl stop cluster -all</div>
+                </li>
+                <li>
+                    <strong>Baja de aplicaciones de Middleware en Q&A</strong>
+                    <p>Las aplicaciones de Middleware se detienen automáticamente con el Sistema Operativo, los servicios el detenerlos u reiniciarlos varían de los productos. La recomendación es en caso de fallo, reiniciar la VM en QA.</p>
+                    
+                    <p>Nos conectamos a nuestro servidor en Q&A:</p>
+                    <div class="code-block">ssh -l root 10.8.79.105</div>
+                    
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🔧 Aplicaciones en Q&A</h4>
+                            <ul>
+                                <li><strong>HULFT</strong></li>
+                                <li><strong>Microfocus Cobol</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p><strong>En caso de querer detenerlos manualmente:</strong></p>
+                    <div class="code-block">systemctl stop MFSafeNet.service</div>
+                    <div class="code-block">systemctl stop hulft.service</div>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Jatco México - Manual Oracle VM Server</p>
+            <p style="opacity: 0.8; font-size: 0.9rem;">Sistema de Transmisiones Automotrices - Documento confidencial</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle for mobile
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Smooth scroll to sections
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                // Close mobile menu if open
+                const navMenu = document.getElementById('navMenu');
+                navMenu.classList.remove('active');
+                
+                // Smooth scroll to section
+                const headerOffset = 100;
+                const elementPosition = element.offsetTop;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Add highlight effect to the target section
+                element.style.transform = 'scale(1.02)';
+                element.style.boxShadow = '0 30px 60px rgba(0, 255, 107, 0.4)';
+                
+                setTimeout(() => {
+                    element.style.transform = '';
+                    element.style.boxShadow = '';
+                }, 1500);
+            }
+            return false;
+        }
+
+        // Enhanced fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = `${Math.random() * 0.5}s`;
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Observe all sections
+            const sections = document.querySelectorAll('.section, .toc');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Enhanced code block interactions
+            const codeBlocks = document.querySelectorAll('.code-block');
+            codeBlocks.forEach(block => {
+                block.addEventListener('click', () => {
+                    // Copy to clipboard with visual feedback
+                    const text = block.textContent.replace('$ ', '');
+                    navigator.clipboard.writeText(text).then(() => {
+                        const originalBg = block.style.background;
+                        const originalBorder = block.style.borderColor;
+                        
+                        block.style.background = 'linear-gradient(135deg, var(--neon-green), var(--accent-green))';
+                        block.style.borderColor = 'var(--neon-green)';
+                        block.style.transform = 'scale(1.02)';
+                        
+                        // Create success indicator
+                        const indicator = document.createElement('span');
+                        indicator.innerHTML = '✓ Copiado';
+                        indicator.style.cssText = `
+                            position: absolute;
+                            top: 10px;
+                            right: 15px;
+                            color: white;
+                            font-weight: bold;
+                            font-size: 0.9rem;
+                            background: rgba(0, 0, 0, 0.7);
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            z-index: 10;
+                        `;
+                        block.appendChild(indicator);
+                        
+                        setTimeout(() => {
+                            block.style.background = originalBg;
+                            block.style.borderColor = originalBorder;
+                            block.style.transform = '';
+                            if (indicator.parentNode) {
+                                indicator.remove();
+                            }
+                        }, 1000);
+                    });
+                });
+                
+                // Add hover tooltip
+                block.title = 'Click para copiar al portapapeles';
+            });
+
+            // Enhanced image zoom functionality
+            const images = document.querySelectorAll('.image-container img');
+            images.forEach(img => {
+                img.addEventListener('click', () => {
+                    // Create modal for image zoom
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background: rgba(0, 0, 0, 0.9);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 1000;
+                        cursor: zoom-out;
+                        backdrop-filter: blur(10px);
+                    `;
+                    
+                    const zoomedImg = img.cloneNode();
+                    zoomedImg.style.cssText = `
+                        max-width: 90vw;
+                        max-height: 90vh;
+                        border-radius: 10px;
+                        box-shadow: 0 20px 60px rgba(0, 255, 107, 0.3);
+                        border: 2px solid var(--neon-green);
+                    `;
+                    
+                    modal.appendChild(zoomedImg);
+                    document.body.appendChild(modal);
+                    
+                    modal.addEventListener('click', () => {
+                        document.body.removeChild(modal);
+                    });
+                });
+            });
+        });
+
+        // Enhanced navigation highlighting with automotive theme
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                const sectionHeight = section.offsetHeight;
+                
+                if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            // Remove active class from all links
+            navLinks.forEach(link => {
+                link.style.background = 'linear-gradient(45deg, transparent, rgba(0, 255, 107, 0.1))';
+                link.style.color = 'white';
+                link.style.boxShadow = '';
+            });
+            
+            // Add active styling to current section link
+            if (current) {
+                navLinks.forEach(link => {
+                    const onclick = link.getAttribute('onclick');
+                    if (onclick && onclick.includes(current)) {
+                        link.style.background = 'var(--gear-gradient)';
+                        link.style.color = 'white';
+                        link.style.boxShadow = '0 0 20px rgba(0, 255, 107, 0.6)';
+                    }
+                });
+            }
+        });
+
+        // Add dynamic gear rotation based on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const gears = document.querySelectorAll('.gear');
+            
+            gears.forEach((gear, index) => {
+                const speed = (index + 1) * 0.1;
+                gear.style.transform = `rotate(${scrolled * speed}deg)`;
+            });
+        });
+
+        // Add particle system for enhanced visual effects
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 3px;
+                height: 3px;
+                background: var(--neon-green);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: -1;
+                opacity: 0.6;
+                left: ${Math.random() * 100}vw;
+                top: 100vh;
+                animation: particleFloat ${5 + Math.random() * 10}s linear forwards;
+            `;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 15000);
+        }
+
+        // Add CSS for particle animation
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes particleFloat {
+                to {
+                    transform: translateY(-100vh) translateX(${Math.random() * 200 - 100}px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+    </script>
+</body>
+</html>
