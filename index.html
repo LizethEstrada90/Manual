@@ -313,6 +313,77 @@
             padding: 0 2rem;
         }
 
+        /* PDF Download Button */
+        .pdf-download-container {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: var(--gear-gradient);
+            color: white;
+            text-decoration: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 3px solid var(--neon-green);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 255, 107, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .download-btn::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), transparent, var(--accent-green), transparent, var(--neon-green));
+            z-index: -1;
+            border-radius: 52px;
+            animation: border-pulse 3s ease-in-out infinite;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(0, 255, 107, 0.6),
+                inset 0 0 20px rgba(0, 255, 107, 0.2);
+            border-color: white;
+            color: white;
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn:active {
+            transform: translateY(-5px) scale(1.02);
+        }
+
         /* Table of Contents with Gear Design */
         .toc {
             background: linear-gradient(135deg, rgba(26, 77, 58, 0.9), rgba(45, 143, 71, 0.8));
@@ -871,6 +942,14 @@
     </nav>
 
     <div class="container">
+       <!-- Download PDF Button -->
+<div class="pdf-download-container fade-in">
+    <a href="manual.pdf" download="Manual_Oracle_VM_Server_Jatco.pdf" class="download-btn">
+        <img src="pdf-icon.png" alt="PDF Icon" style="width:20px; vertical-align:middle; margin-right:8px;">
+        Descargar Manual en PDF
+    </a>
+</div>
+
         <!-- Table of Contents -->
         <div class="toc fade-in">
             <h2>⚙️ Índice de Contenidos</h2>
@@ -1288,7 +1367,96 @@
                 </div>
             </div>
 
-            <h3>1. Baja de BD en ambientes de Producción (De manera manual)</h3>
+            <h3>1. Apagado de VMs de BD y Middleware de Prod y Q&A</h3>
+            
+            <ul class="step-list">
+                <li>
+                    <strong>Acceder a la siguiente dirección: https://10.92.90.107:7002/ovm/console</strong>
+                    <p>Deberá observar la siguiente pantalla</p>
+                    <div class="image-container">
+                        <img src="10.png" alt="Pantalla principal Oracle VM Manager">
+                    </div>
+                </li>
+                <li>
+                    <strong>Proceder a apagar dentro de cada servidor las VMs de BD y QA</strong>
+                    <p><strong>Aplica para los Servidores Virtuales:</strong></p>
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🏭 Ambiente de Producción</h4>
+                            <p><strong>Orden de apagado:</strong></p>
+                            <ol>
+                                <li>JMXSVL07</li>
+                                <li>JMXSVL08</li>
+                                <li>JMXSVL09</li>
+                            </ol>
+                        </div>
+                        <div class="server-card">
+                            <h4>🔬 Ambiente de Q&A</h4>
+                            <p><strong>Orden de apagado:</strong></p>
+                            <ol>
+                                <li>JMXSVL05</li>
+                                <li>JMXSVL06</li>
+                            </ol>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Click de botón derecho sobre la VM y seleccionar la opción de "Stop"</strong>
+                    <div class="image-container">
+                        <img src="29.jpeg" alt="Menú contextual con opción Start">
+                    </div>
+                    <div class="image-container">
+                        <img src="30.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="33.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                      <div class="image-container">
+                        <img src="36.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                      <div class="image-container">
+                        <img src="37.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                     <strong>Proceder a apagar dentro de cada servidor</strong>
+                    <p><strong>Aplica para los Servidores Físicos:</strong></p>
+                    <div class="server-info">
+                        <div class="server-card">
+                            <h4>🏭 Ambiente de Producción</h4>
+                            <p><strong>Orden de apagado:</strong></p>
+                            <ol>
+                                <li>JMXSVL01.jatco.om.mx </li>
+                                <li>JMXSVL02.jatco.om.mx </li>
+                            </ol>
+                        </div>
+                        <div class="server-card">
+                            <h4>🔬 Ambiente de Q&A</h4>
+                            <p><strong>Orden de apagado:</strong></p>
+                            <ol>
+                                <li>JMXSVL03.jatco.om.mx </li>
+                                <li>JMXSVL04.jatco.om.mx </li>
+                            </ol>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <strong>Click de botón derecho sobre Fisico y seleccionar la opción de "Stop"</strong>
+                    <div class="image-container">
+                        <img src="31.jpeg" alt="Menú contextual con opción Start">
+                    </div>
+                    <div class="image-container">
+                        <img src="32.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="34.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                    <div class="image-container">
+                        <img src="35.jpeg" alt="Confirmación de inicio de VM">
+                    </div>
+                   
+                </li>
+                <li>
+
+            <h3>2. Baja de BD en ambientes de Producción (De manera manual)</h3>
             
             <ul class="step-list">
                 <li>
@@ -1340,7 +1508,7 @@
                 </li>
             </ul>
 
-            <h3>2. Baja de Aplicaciones en Producción</h3>
+            <h3>3. Baja de Aplicaciones en Producción</h3>
             
             <ul class="step-list">
                 <li>
@@ -1366,7 +1534,7 @@
                 </li>
             </ul>
 
-            <h3>3. Baja de BD en ambientes de QA (De manera manual)</h3>
+            <h3>4. Baja de BD en ambientes de QA (De manera manual)</h3>
             
             <ul class="step-list">
                 <li>
