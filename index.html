@@ -1351,6 +1351,7 @@
             </div>
                     
             <p><strong>Para validar que se estén ejecutando correctamente:</strong></p>
+            <div class="code-block">systemctl list-unit-files --type service --all | grep -i hulf</div>
             <div class="code-block">systemctl list-unit-files --type service --all | grep -i MFS</div>
             
             <div class="image-container">
@@ -1359,7 +1360,7 @@
             
             <p><strong>Si está habilitado validar que se estén ejecutando:</strong></p>
             <div class="code-block">systemctl status MFSafeNet.service</div>
-            
+            <div class="code-block">systemctl status hulft.service</div>
             <div class="image-container">
                 <img src="21.png" alt="Estado detallado de servicios">
             </div>
@@ -1965,6 +1966,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 </body>
 
 </html>
+
 
 
 
