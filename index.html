@@ -1052,7 +1052,7 @@
     <div class="container">
        <!-- Download PDF Button -->
 <div class="pdf-download-container fade-in">
-    <a href="manual.pdf" download="Manual_Oracle_VM_Server_Jatco.pdf" class="download-btn">
+    <a href="Manual.pdf" download="Manual_Oracle_VM_Server_Jatco.pdf" class="download-btn">
         <img src="pdf-icon.png" alt="PDF Icon" style="width:20px; vertical-align:middle; margin-right:8px;">
         Descargar Manual en PDF
     </a>
@@ -1368,7 +1368,11 @@
             
             <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
             <div class="code-block">systemctl start MFSafeNet.service</div>
-            <div class="code-block">systemctl start hulft.service</div>
+            <div class="code-block">cd /usr/local/HULFT/bin
+./hulsndd
+./hulrcvd
+./hulobsd
+</div>
 
             <h3>5. Levantamiento de BD en ambientes de Q&A</h3>
             
@@ -1458,7 +1462,11 @@
                     
                     <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
                     <div class="code-block">systemctl start MFSafeNet.service</div>
-                    <div class="code-block">systemctl start hulft.service</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin
+./hulsndd
+./hulrcvd
+./hulobsd
+</div>
                 </li>
             </ul>
         </section>
@@ -1638,7 +1646,10 @@
 
                     <p><strong>En caso de querer detenerlos manualmente:</strong></p>
                     <div class="code-block">systemctl stop MFSafeNet.service</div>
-                    <div class="code-block">systemctl stop hulft.service</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin
+./utlkillsnd
+./utlkillrcv
+./utlkillobs</div>
                 </li>
             </ul>
 
@@ -1689,7 +1700,10 @@
                     
                     <p><strong>En caso de querer detenerlos manualmente:</strong></p>
                     <div class="code-block">systemctl stop MFSafeNet.service</div>
-                    <div class="code-block">systemctl stop hulft.service</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin
+./utlkillsnd
+./utlkillrcv
+./utlkillobs</div>
                 </li>
             </ul>
         </section>
@@ -1969,3 +1983,4 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 </body>
 
 </html>
+
