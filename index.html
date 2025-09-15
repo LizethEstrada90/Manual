@@ -1360,19 +1360,14 @@
             
             <p><strong>Si está habilitado validar que se estén ejecutando:</strong></p>
             <div class="code-block">systemctl status MFSafeNet.service</div>
-            <div class="code-block">systemctl status hulft.service</div>
             
             <div class="image-container">
                 <img src="21.png" alt="Estado detallado de servicios">
             </div>
             
-            <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
+            <p><strong>Para iniciar el servicio de Microfocus y Hulft se debe ejecutar, en caso de que no levanten de manera automática:</strong></p>
             <div class="code-block">systemctl start MFSafeNet.service</div>
-            <div class="code-block">cd /usr/local/HULFT/bin
-./hulsndd
-./hulrcvd
-./hulobsd
-</div>
+            <div class="code-block">cd /usr/local/HULFT/bin<br>./hulsndd<br>./hulrcvd<br>./hulobsd</div>
 
             <h3>5. Levantamiento de BD en ambientes de Q&A</h3>
             
@@ -1445,7 +1440,6 @@
                     </div>
                     
                     <p><strong>La forma de validar es la siguiente:</strong></p>
-                    <div class="code-block">systemctl list-unit-files --type service --all | grep -i hulft</div>
                     <div class="code-block">systemctl list-unit-files --type service --all | grep -i MFS</div>
                     
                     <div class="image-container">
@@ -1454,7 +1448,6 @@
                     
                     <p><strong>Si está habilitado validar que se estén ejecutando:</strong></p>
                     <div class="code-block">systemctl status MFSafeNet.service</div>
-                    <div class="code-block">systemctl status hulft.service</div>
                     
                     <div class="image-container">
                         <img src="26.png" alt="Estado de servicios Q&A">
@@ -1462,11 +1455,7 @@
                     
                     <p><strong>Para iniciar el servicio se debe ejecutar:</strong></p>
                     <div class="code-block">systemctl start MFSafeNet.service</div>
-                    <div class="code-block">cd /usr/local/HULFT/bin
-./hulsndd
-./hulrcvd
-./hulobsd
-</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin<br>./hulsndd<br>./hulrcvd<br>./hulobsd</div>
                 </li>
             </ul>
         </section>
@@ -1646,10 +1635,7 @@
 
                     <p><strong>En caso de querer detenerlos manualmente:</strong></p>
                     <div class="code-block">systemctl stop MFSafeNet.service</div>
-                    <div class="code-block">cd /usr/local/HULFT/bin
-./utlkillsnd
-./utlkillrcv
-./utlkillobs</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin<br>./utlkillsnd<br>./utlkillrcv<br>./utlkillobs</div>
                 </li>
             </ul>
 
@@ -1700,10 +1686,7 @@
                     
                     <p><strong>En caso de querer detenerlos manualmente:</strong></p>
                     <div class="code-block">systemctl stop MFSafeNet.service</div>
-                    <div class="code-block">cd /usr/local/HULFT/bin
-./utlkillsnd
-./utlkillrcv
-./utlkillobs</div>
+                    <div class="code-block">cd /usr/local/HULFT/bin<br>./utlkillsnd<br>./utlkillrcv<br>./utlkillobs</div>
                 </li>
             </ul>
         </section>
@@ -1983,4 +1966,5 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 </body>
 
 </html>
+
 
